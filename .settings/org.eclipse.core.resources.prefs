@@ -1,0 +1,14 @@
+eclipse.preferences.version=1
+encoding//src/main/java/kr/ac/kopo/controller/BoardController.java=UTF-8
+encoding//src/main/java/kr/ac/kopo/controller/WebtoonController.java=UTF-8
+encoding//src/main/java/kr/ac/kopo/model/Board.java=UTF-8
+encoding//src/main/java/kr/ac/kopo/model/Webtoon.java=UTF-8
+encoding//src/main/java/kr/ac/kopo/service/WebtoonServiceImpl.java=UTF-8
+encoding//src/main/webapp/WEB-INF/views/board/admin.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/index.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/users/list.jsp=UTF-8
+encoding//src/main/webapp/resources/css/bd_add.css=UTF-8
+encoding//src/main/webapp/resources/css/bd_admin.css=UTF-8
+encoding//src/main/webapp/resources/css/index.css=UTF-8
+encoding//src/main/webapp/resources/css/wt_admin.css=UTF-8
+encoding//src/main/webapp/resources/css/wt_view.css=UTF-8

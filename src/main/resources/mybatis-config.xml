@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "https://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+	</settings>
+	
+	<typeAliases>
+		<typeAlias type="kr.ac.kopo.model.Webtoon" alias="Webtoon"/>	
+		<typeAlias type="kr.ac.kopo.model.Users" alias="Users"/>
+		<typeAlias type="kr.ac.kopo.model.Photo" alias="Photo"/>
+		<typeAlias type="kr.ac.kopo.model.Board" alias="Board"/>	
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="mapper/webtoon.xml"/>
+		<mapper resource="mapper/users.xml"/>
+		<mapper resource="mapper/board.xml"/>
+	</mappers>
+</configuration>

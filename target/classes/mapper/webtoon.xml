@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="webtoon">
+
+	<sql id="search">
+		SELECT * FROM webtoon
+
+		<where>
+			<if test="search == 1">
+				author LIKE CONCAT(CONCAT('%', #{keyword}), '%')
+			</if>
+
+			<if test="search == 2">
+				title LIKE CONCAT(CONCAT('%', #{keyword}), '%')
+			</if>
+
+		</where>
+		ORDER BY id
+	</sql>
+
+	<select id="list_keyset" resultMap="webtoonMap">
+		 select webtoon.*,
+		 	photo.id photo_id, 
+		    photo.filename, 
+		    photo.uuid, 
+		    photo.webtoon_id  
+		 from webtoon
+		 JOIN photo ON webtoon.id =photo.webtoon_id
+		<where>
+			webtoon.id IN 
+			<foreach collection="keySet" item="key" open="(" close=")" separator=",">
+				#{key}
+			</foreach>
+		</where>
+	</select>
+
+	<select id="list" resultMap="webtoonMap">
+		SELECT webtoon.*, photo.id photo_id, photo.filename, photo.uuid, photo.webtoon_id FROM 
+		(SELECT * FROM
+			(SELECT sub.*, ROWNUM rnum FROM
+				(<include refid="search"></include>) sub )
+
+		<if test="perPage != 0">
+			WHERE rnum BETWEEN ((#{page} - 1) * #{perPage}) + 1 AND (#{page} * #{perPage})
+		</if>) webtoon
+		LEFT JOIN photo ON webtoon.id=photo.webtoon_id 
+		ORDER BY webtoon_id
+	</select>
+	
+	<select id="total" resultType="Integer">
+		SELECT COUNT(*) FROM (
+		<include refid="search"></include>
+		)
+	</select>
+
+	<insert id="add">
+		INSERT INTO webtoon 
+		(id, author, title, plot, star)
+		VALUES
+		(WEBTOON_SEQ.nextval, #{author}, #{title}, #{plot}, #{star})
+
+		<selectKey keyProperty="id" resultType="Long" order="AFTER">
+			SELECT
+			WEBTOON_SEQ.currval FROM dual
+		</selectKey>
+	</insert>
+	
+	<resultMap type="Webtoon" id="webtoonMap" autoMapping="true">
+		<id column="id" property="id" />
+		
+		<collection column="webtoon_id" property="photo" ofType="Photo" javaType="ArrayList" autoMapping="true">
+			<id column="photo_id" property="id"/>
+		</collection>		
+	</resultMap>
+	
+	<select id="item" resultMap="webtoonMap">
+		SELECT webtoon.*, 
+		    photo.id photo_id, 
+		    photo.filename, 
+		    photo.uuid, 
+		    photo.webtoon_id 
+		FROM webtoon
+		LEFT JOIN photo ON webtoon.id=photo.webtoon_id
+		WHERE webtoon.id=#{id}
+	</select>
+
+
+	<delete id="delete">
+		DELETE FROM webtoon
+		WHERE id=#{id}
+	</delete>
+	
+	<update id="update">
+		UPDATE webtoon
+		SET title=#{title}, author=#{author}, plot=#{plot}, star=#{star}
+		WHERE id=#{id}
+	</update>
+
+	<insert id="add_photo">
+		INSERT INTO photo
+		(id, webtoon_id, filename, uuid)
+		VALUES 
+		(PHOTO_SEQ.nextval, #{webtoonId}, #{filename}, #{uuid})
+	</insert>
+
+	<select id="item_photo" resultType="Photo">
+		SELECT * FROM photo
+		WHERE id=#{id}
+	</select>
+	
+	<delete id="delete_photo">
+		DELETE FROM photo
+		WHERE id=#{id}
+	</delete>
+	
+	<delete id="delete_photos">
+		DELETE FROM photo
+		WHERE webtoon_id=#{id}
+	</delete>
+	
+	<update id="ustar">
+		UPDATE webtoon
+		SET ustar=#{ustar}
+		WHERE id=#{id}
+	</update>
+</mapper>
